@@ -1,10 +1,13 @@
 package Game;
+
 import java.io.Serializable;
+
 class Rouge extends Player implements Serializable
 {
 	private static final long serialVersionUID = -9219641156098824973L;
-	public double  stamina;
-	Rouge(String name, int health, int attack, int defense, int agility, double exp, double stamina) 
+	public double stamina;
+
+	Rouge(String name, int health, int attack, int defense, int agility, double exp, double stamina)
 	{
 		this.name = name;
 		this.health = health;
@@ -15,10 +18,11 @@ class Rouge extends Player implements Serializable
 		this.stamina = stamina;
 		classType = ClassTypes.Rouge;
 	}
-	
+
 	@Override
 	public String getStats()
 	{
-		return name + "'s Stats:\n" + "Health: " + health + "/100\n" + "Attack: " + attack + "\nDefense: " + defense + "\nAgility: " + agility;
+		return name + "'s Stats:\n" + "Health: " + health + "/100\n" + "Attack: " + attack + "\nDefense: " + defense
+				+ "\nAgility: " + agility;
 	}
 }
