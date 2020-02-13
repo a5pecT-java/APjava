@@ -55,4 +55,19 @@ public class Player implements Serializable
 	{
 		return agility;
 	}
+
+	public int toText(Player userPlayer)
+	{
+		return 0;
+	}
+
+	public void giveExp(int lvl1)
+	{
+
+	}
+
+	public double getExp()
+	{
+		return exp;
+	}
 }

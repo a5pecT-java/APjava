@@ -1,8 +1,8 @@
 package Game;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.ObjectInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 import Game.Player.ClassTypes;
@@ -10,10 +10,10 @@ import Game.Player.ClassTypes;
 public class Game
 {
 	Scanner scanner = new Scanner(System.in);
-	Player userPlayer;
+	static Player userPlayer;
 	boolean playing = true;
 
-	final String filePath = "Players.txt";
+	final String filePath = "C:\\Users\\DanDa\\Documents\\GitHub\\APjava\\Javamon\\src\\Game\\Players.txt";
 
 	public void Run()
 	{
@@ -23,14 +23,12 @@ public class Game
 		{
 			int menuChoice = printMainMenu();
 			checkMenuChoice(menuChoice);
-
 		}
 	}
 
 	private void printTitle()
 	{
 		System.out.println("Welcome to the Infinity Dungeon!");
-
 	}
 
 	private int printMainMenu()
@@ -49,78 +47,203 @@ public class Game
 	private void checkMenuChoice(int menuChoice)
 	{
 		switch (menuChoice)
+			{
+			case 1: // 1. Create a Character!
+			{
+				createPlayer();
+				break;
+			}
+			case 2: // 2. Load a Character!"
+			{
+				Load.loadPlayer(scanner, userPlayer, filePath);
+				break;
+			}
+			case 3: // 3. Check your Stats!
+			{
+				checkStats();
+				break;
+			}
+			case 4: // 4. Go and Battle!
+			{
+				userPlayer.getExp();
+				battle(callCreateMonster(), userPlayer);
+				break;
+			}
+			case 5: // 5. Save and Quit
+			{
+				Save.savePlayer(userPlayer, filePath);
+				break;
+			}
+			case 6: // 6. Quit
+			{
+				playing = false;
+				break;
+			}
+			}
+	}
+
+	private static void battle(String monster, Player userPlayer)
+	{
+		int lvl1 = (int) (Math.random() * 10 + 15);
+		int lvl2 = (int) (Math.random() * 20 + 15);
+		int lvl3 = (int) (Math.random() * 30 + 20);
+		int lvl4 = (int) (Math.random() * 40 + 25);
+		int lvl5 = (int) (Math.random() * 50 + 30);
+		double XP = userPlayer.getExp();
+		int level = 1;
+		if (XP < 100)
 		{
-		case 1: // 1. Create a Character!
+			System.out.println(userPlayer.getName() + "'s Level: " + level);
+		} else if (XP > 100 && XP < 200)
 		{
-			createPlayer();
-			break;
+			level++;
+			System.out.println(userPlayer.getName() + "'s Level: " + level);
+		} else if (XP > 200 && XP < 275)
+		{
+			level++;
+			System.out.println(userPlayer.getName() + "'s Level: " + level);
+		} else if (XP > 275 && XP < 325)
+		{
+			level++;
+			System.out.println(userPlayer.getName() + "'s Level: " + level);
+		} else
+		{
+			level++;
+			System.out.println(userPlayer.getName() + "'s Level: " + level);
 		}
-		case 2: // 2. Load a Character!"
+		int xpBar1 = 100;
+
+		Boolean battling = true;
+		Boolean dead = false;
+		System.out.println("In battle.");
+		while (battling)
 		{
-			loadPlayer();
-			break;
+			switch (monster)
+				{
+				// Level Ones
+				case "Undead Corpse":
+				{
+//					if (dead)
+//					{
+//						userPlayer.giveExp(lvl1);
+//					}
+					break;
+				}
+				case "Rat":
+				{
+
+					break;
+				}
+				case "Slime":
+				{
+					break;
+				}
+				case "Giant Leech":
+				{
+					break;
+				}
+				case "Skeleton":
+				{
+					break;
+				}
+				// Level Twos
+				case "Lich":
+				{
+					break;
+				}
+				case "Skeleton Archer":
+				{
+					break;
+				}
+				case "Rust Monster":
+				{
+					break;
+				}
+				case "Ghoul":
+				{
+					break;
+				}
+				case "Blood Hound":
+				{
+					break;
+				}
+				// Level Threes
+				case "Orc":
+				{
+					break;
+				}
+				case "Skeleton Warrior":
+				{
+					break;
+				}
+				case "Giant":
+				{
+					break;
+				}
+				case "Dark Mage":
+				{
+					break;
+				}
+				case "Stone Giant":
+				{
+					break;
+				}
+				case "Vampire":
+				{
+					break;
+				}
+				case "Corrupted Hero":
+				{
+					break;
+				}
+				case "Elemental":
+				{
+					break;
+				}
+				case "Mimic":
+				{
+					break;
+				}
+				// Level Fives
+				case "Demon":
+				{
+					break;
+				}
+				case "Dragon":
+				{
+					break;
+				}
+				}
 		}
-		case 3: // 3. Check your Stats!
+
+	}
+
+	private static String callCreateMonster()
+	{
+		try
 		{
-			checkStats();
-			break;
-		}
-		case 4: // 4. Go and Battle!
+			return monsterSelector();
+		} catch (IOException e)
 		{
-			//
-			battle();
-//			System.out.println("FUCKING HELL");
-//			String monsterIs = "";
-//			try
-//			{
-//				monsterSelector(monsterIs);
-//			} catch (IOException e)
-//			{
-//				System.out.println("Couldn't Find it...");
-//				e.printStackTrace();
-//			}
-			break;
-		}
-		case 5: // 5. Save and Quit
-		{
-			Save.savePlayer(userPlayer);
-			break;
-		}
-		case 6: // 6. Quit
-		{
-			playing = false;
-			break;
-		}
+			System.out.println("didn't reach it");
+			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public void battle()
+	private static String monsterSelector() throws IOException
 	{
-		System.out.println("i hate myself");
-	}
-//	public static void callCreateMonster()
-//	{
-//		String monsterIs = "";
-//		try
-//		{
-//			monsterSelector(monsterIs);
-//		} catch (IOException e)
-//		{
-//			System.out.println("cant ffing reach");
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	public static String monsterSelector(String monster) throws IOException
-//	{
-//
-//		File monsterSelect = new File("Monsters.txt");
+		String monster = "";
+		FileReader fr = new FileReader("C:\\Users\\DanDa\\Documents\\GitHub\\APjava\\Javamon\\src\\Game\\Monsters");
+		BufferedReader ReadFileBuffer = new BufferedReader(fr);
+//		File monsterSelect = new File("Monsters");
 //		BufferedReader c1 = new BufferedReader(new FileReader(monsterSelect));
-//		int random = (int) (Math.random() * 21 + 1);
-//		for (int i = 0; i < random; i++)
-//			monster = c1.readLine();
-//		return monster;
-//	}
+		int random = (int) (Math.random() * 21 + 1);
+		for (int i = 0; i < random; i++)
+			monster = ReadFileBuffer.readLine();
+		fr.close();
+		return monster;
+	}
 
 	private void createPlayer()
 	{
@@ -159,66 +282,66 @@ public class Game
 	private ClassTypes getClassTypeFromInt(int choice)
 	{
 		switch (choice)
-		{
-		case 1:
-			return ClassTypes.Knight;
-		case 2:
-			return ClassTypes.Rouge;
-		case 3:
-			return ClassTypes.Wizard;
-		case 4:
-			return ClassTypes.Deity;
-		default:
-			return ClassTypes.Knight;
-		}
+			{
+			case 1:
+				return ClassTypes.Knight;
+			case 2:
+				return ClassTypes.Rouge;
+			case 3:
+				return ClassTypes.Wizard;
+			case 4:
+				return ClassTypes.Deity;
+			default:
+				return ClassTypes.Knight;
+			}
 	}
 
 	private void pickStats(String name, ClassTypes selectedClassType)
 	{
 		System.out.println("Pick attack, defense, and agility stats.");
 		System.out.println("You get 6 points to distribute among the three.");
-		int at, de, ag;
+		int attack, defense, agility;
 		do
 		{
 			System.out.print("Enter Attack stat: ");
-			at = scanner.nextInt();
+			attack = scanner.nextInt();
 			System.out.print("Enter Defense stat: ");
-			de = scanner.nextInt();
+			defense = scanner.nextInt();
 			System.out.print("Enter Agility stat: ");
-			ag = scanner.nextInt();
-		} while (at + de + ag > 6); // check for negatives
+			agility = scanner.nextInt();
+		} while (attack + defense + agility > 6); // check for negatives
 		System.out.println();
 
 		Player newPlayer = null;
 
 		switch (selectedClassType)
-		{
-		case Knight:
-		{
-			newPlayer = new Knight(name, 100, 15 + at, 30 + de, 8 + ag, 0.0, 0.0);
-			System.out.println("You Picked Knight, you have more armor and a special attribute called Pride!");
-			break;
-		}
-		case Rouge:
-		{
-			newPlayer = new Rouge(name, 80, 25 + at, 10 + de, 30 + ag, 0.0, 100.0);
-			System.out.println(
-					"You Picked Rouge, you have more agility and attack and a special attribute called Stamina!");
-			break;
-		}
-		case Wizard:
-		{
-			newPlayer = new Wizard(name, 60, 40 + at, 5 + de, 15 + ag, 0.0, 100.0);
-			System.out.println("You Picked Wizard, you have the most attack and a special attribute called Mana!");
-			break;
-		}
-		case Deity:
-		{
-			newPlayer = new Deity("Lord " + name, 0.0);
-			System.out.println("You're literally a God, unleash your wrath amongst the infinity tower!");
-			break;
-		}
-		}
+			{
+			case Knight:
+			{
+				newPlayer = new Knight(name, 100, 15 + attack, 30 + defense, 8 + agility, 0.0, 0.0);
+				System.out.println("You Picked Knight, you have more armor and a special attribute called Pride!");
+				break;
+			}
+			case Rouge:
+			{
+				newPlayer = new Rouge(name, 80, 25 + attack, 10 + defense, 30 + agility, 0.0, 100.0);
+				System.out.println(
+						"You Picked Rouge, you have more agility and attack and a special attribute called Stamina!");
+				break;
+			}
+			case Wizard:
+			{
+				newPlayer = new Wizard(name, 60, 40 + attack, 5 + defense, 15 + agility, 0.0, 100.0);
+				System.out.println("You Picked Wizard, you have the most attack and a special attribute called Mana!");
+				break;
+			}
+			case Deity:
+			{
+				newPlayer = new Deity("Lord " + name, 0.0);
+				System.out.println("You're literally a God, unleash your wrath amongst the infinity tower!");
+				break;
+			}
+			}
 
 		userPlayer = newPlayer;
 		System.out.println();
@@ -228,83 +351,5 @@ public class Game
 	{
 		System.out.println(userPlayer.getStats());
 		System.out.println();
-	}
-
-	private void loadPlayer()
-	{
-		Player[] players = listSavedPlayers();
-		// list out players
-		for (int i = 0; i < players.length; i++)
-		{
-			int currentPlayerNumber = i + 1;
-			System.out.println(currentPlayerNumber + ". " + players[i].name);
-		}
-		// choose by integer
-		int playerChoice = scanner.nextInt();
-
-		// turn integer into a player
-		int playerIndex = playerChoice - 1;
-		Player chosenPlayer = getPlayer(players[playerIndex].name);
-
-		userPlayer = chosenPlayer;
-	}
-
-	private Player getPlayer(String name)
-	{
-		Player[] players = listSavedPlayers();
-		for (int i = 0; i < players.length; i++)
-		{
-			Player currentPlayer = players[i];
-			String currentPlayerName = currentPlayer.name;
-			if (currentPlayerName == name)
-			{
-				return currentPlayer;
-			}
-		}
-
-		return null;
-	}
-
-	private Player[] listSavedPlayers()
-	{
-		try
-		{
-			FileInputStream fileIn = new FileInputStream(filePath);
-			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-
-			Player[] players = new Player[100];
-
-			int currentIndex = 0;
-			boolean hasObjects = true;
-
-			while (hasObjects)
-			{
-				Object objectThatWasRead = objectIn.readObject();
-				if (objectThatWasRead != null)
-				{
-					players[currentIndex] = (Player) objectThatWasRead;
-					currentIndex++;
-				} else
-				{
-					hasObjects = false;
-				}
-			}
-			fileIn.close();
-			objectIn.close();
-
-			return players;
-		} catch (FileNotFoundException e)
-		{
-			System.out.println("File was not found.");
-		} catch (ClassNotFoundException e)
-		{
-			System.out.println("Couldn't find class.");
-		} catch (Exception e)
-		{
-			System.out.println("There are no players");
-			Run();
-		}
-
-		return new Player[4];
 	}
 }

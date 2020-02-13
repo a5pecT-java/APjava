@@ -5,11 +5,11 @@ import java.io.ObjectOutputStream;
 
 public class Save
 {
-	public static void savePlayer(Player player)
+	public static void savePlayer(Player player, String filePath)
 	{
 		try
 		{
-			FileOutputStream fileOut = new FileOutputStream("Players.txt");
+			FileOutputStream fileOut = new FileOutputStream(filePath);
 			ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 			objectOut.writeObject(player);
 			objectOut.close();

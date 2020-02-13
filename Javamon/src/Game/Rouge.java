@@ -26,23 +26,40 @@ class Rouge extends Player implements Serializable
 				+ "\nAgility: " + agility;
 	}
 
+	@Override
 	public int getHealth()
 	{
 		return health;
 	}
 
+	@Override
 	public int getAttack()
 	{
 		return attack;
 	}
 
+	@Override
 	public int getDefense()
 	{
 		return defense;
 	}
 
+	@Override
 	public int getAgility()
 	{
 		return agility;
 	}
+
+	@Override
+	public void giveExp(int amount)
+	{
+		exp += amount;
+	}
+
+	@Override
+	public double getExp()
+	{
+		return exp;
+	}
+
 }
