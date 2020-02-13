@@ -22,7 +22,27 @@ class Rouge extends Player implements Serializable
 	@Override
 	public String getStats()
 	{
-		return name + "'s Stats:\n" + "Health: " + health + "/100\n" + "Attack: " + attack + "\nDefense: " + defense
+		return name + "'s Stats:\n" + "Health: " + health + "/80\n" + "Attack: " + attack + "\nDefense: " + defense
 				+ "\nAgility: " + agility;
+	}
+
+	public int getHealth()
+	{
+		return health;
+	}
+
+	public int getAttack()
+	{
+		return attack;
+	}
+
+	public int getDefense()
+	{
+		return defense;
+	}
+
+	public int getAgility()
+	{
+		return agility;
 	}
 }

@@ -21,7 +21,27 @@ class Wizard extends Player implements Serializable
 	@Override
 	public String getStats()
 	{
-		return name + "'s Stats:\n" + "Health: " + health + "/100\n" + "Attack: " + attack + "\nDefense: " + defense
+		return name + "'s Stats:\n" + "Health: " + health + "/60\n" + "Attack: " + attack + "\nDefense: " + defense
 				+ "\nMana: " + mana;
+	}
+
+	public int getHealth()
+	{
+		return health;
+	}
+
+	public int getAttack()
+	{
+		return attack;
+	}
+
+	public int getDefense()
+	{
+		return defense;
+	}
+
+	public int getAgility()
+	{
+		return agility;
 	}
 }

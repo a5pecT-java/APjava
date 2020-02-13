@@ -23,12 +23,14 @@ public class Game
 		{
 			int menuChoice = printMainMenu();
 			checkMenuChoice(menuChoice);
+
 		}
 	}
 
 	private void printTitle()
 	{
 		System.out.println("Welcome to the Infinity Dungeon!");
+
 	}
 
 	private int printMainMenu()
@@ -37,7 +39,7 @@ public class Game
 		System.out.println("2. Load a Character!");
 		System.out.println("3. Check your Stats!");
 		System.out.println("4. Goto Battle!");
-		System.out.println("5. Quit and Save");
+		System.out.println("5. Save");
 		System.out.println("6. Quit");
 		System.out.print("Choice: ");
 		int menuChoice = scanner.nextInt();
@@ -63,14 +65,24 @@ public class Game
 			checkStats();
 			break;
 		}
-//			case 4: // 4. Go and Battle!
+		case 4: // 4. Go and Battle!
+		{
+			//
+			battle();
+//			System.out.println("FUCKING HELL");
+//			String monsterIs = "";
+//			try
 //			{
-//				battle();
-//				break;
+//				monsterSelector(monsterIs);
+//			} catch (IOException e)
+//			{
+//				System.out.println("Couldn't Find it...");
+//				e.printStackTrace();
 //			}
+			break;
+		}
 		case 5: // 5. Save and Quit
 		{
-			playing = false;
 			Save.savePlayer(userPlayer);
 			break;
 		}
@@ -81,6 +93,34 @@ public class Game
 		}
 		}
 	}
+
+	public void battle()
+	{
+		System.out.println("i hate myself");
+	}
+//	public static void callCreateMonster()
+//	{
+//		String monsterIs = "";
+//		try
+//		{
+//			monsterSelector(monsterIs);
+//		} catch (IOException e)
+//		{
+//			System.out.println("cant ffing reach");
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	public static String monsterSelector(String monster) throws IOException
+//	{
+//
+//		File monsterSelect = new File("Monsters.txt");
+//		BufferedReader c1 = new BufferedReader(new FileReader(monsterSelect));
+//		int random = (int) (Math.random() * 21 + 1);
+//		for (int i = 0; i < random; i++)
+//			monster = c1.readLine();
+//		return monster;
+//	}
 
 	private void createPlayer()
 	{
@@ -249,7 +289,6 @@ public class Game
 					hasObjects = false;
 				}
 			}
-
 			fileIn.close();
 			objectIn.close();
 
