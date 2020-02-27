@@ -61,9 +61,9 @@ public class Player implements Serializable
 		return 0;
 	}
 
-	public void giveExp(int lvl1)
+	public void giveExp(int amount)
 	{
-
+		exp += amount;
 	}
 
 	public double getExp()

@@ -9,11 +9,11 @@ import Game.Player.ClassTypes;
 
 public class Game
 {
-	Scanner scanner = new Scanner(System.in);
+	static Scanner scanner = new Scanner(System.in);
 	static Player userPlayer;
 	boolean playing = true;
 
-	final String filePath = "C:\\Users\\DanDa\\Documents\\GitHub\\APjava\\Javamon\\src\\Game\\Players.txt";
+	final static String filePath = "C:\\Users\\DanDa\\Documents\\GitHub\\APjava\\Javamon\\src\\Game\\Players.txt";
 
 	public void Run()
 	{
@@ -82,9 +82,44 @@ public class Game
 		}
 	}
 
-	private static void battle(String monster, Player userPlayer)
+	private int attack(int monsterHP, int monsterAttack, String monster, boolean monsterDead)
 	{
+		int attack = userPlayer.getAttack();
+		int health = userPlayer.getHealth();
+		if (monsterHP > 0)
+		{
+			monsterHP -= attack;
+			System.out.println("You did " + attack + " damage, the " + monster + "'s HP is " + monsterHP);
+		} else if (monsterHP < 0)
+		{
+			System.out.println("You killed the " + monster + "!");
+			monsterHP = 0;
+			monsterDead = true;
+		}
+		if (health > 0)
+		{
+			health -= monsterAttack;
+			System.out.println("The monster did " + monsterAttack + " damage, your HP is " + health);
+		} else
+		{
+			System.out.println("You died!");
+		}
+		return monsterHP;
+	}
 
+	private static int battleMenu()
+	{
+		System.out.println("1. Attack");
+		System.out.println("2. Check Monster Stats");
+		System.out.println("3. Leave Battle");
+		System.out.print("Choice: ");
+		int choice = scanner.nextInt();
+		return choice;
+	}
+
+	private void battle(String monster, Player userPlayer)
+	{
+		System.out.println();
 		// Amount of XP you get from each monster.
 		int lvl1 = (int) (Math.random() * 10 + 15);
 		int lvl2 = (int) (Math.random() * 20 + 15);
@@ -92,136 +127,1128 @@ public class Game
 		int lvl4 = (int) (Math.random() * 40 + 25);
 		int lvl5 = (int) (Math.random() * 50 + 30);
 		double XP = userPlayer.getExp();
-		System.out.println(XP);
 		int level = 1;
 		if (XP < 100)
 		{
+			int xpBar1 = 200;
 			System.out.println(userPlayer.getName() + "'s Level: " + level);
+			System.out.print("EXP BAR: ");
+			System.out.println("[" + XP + "/" + xpBar1 + "]");
 		} else if (XP > 100 && XP < 200)
 		{
+			int xpBar2 = 275;
 			level++;
 			System.out.println(userPlayer.getName() + "'s Level: " + level);
+			System.out.print("EXP BAR: ");
+			System.out.println("[" + XP + "/" + xpBar2 + "]");
 		} else if (XP > 200 && XP < 275)
 		{
+			int xpBar3 = 325;
 			level++;
 			System.out.println(userPlayer.getName() + "'s Level: " + level);
+			System.out.print("EXP BAR: ");
+			System.out.println("[" + XP + "/" + xpBar3 + "]");
 		} else if (XP > 275 && XP < 325)
 		{
+			int xpBar4 = 500;
 			level++;
 			System.out.println(userPlayer.getName() + "'s Level: " + level);
+			System.out.print("EXP BAR: ");
+			System.out.println("[" + XP + "/" + xpBar4 + "]");
 		} else
 		{
 			level++;
 			System.out.println(userPlayer.getName() + "'s Level: " + level);
+			System.out.print("EXP BAR: ");
+			System.out.println("[MAX LEVEL]");
 		}
-		int xpBar1 = 100;
-		int xpBar2 = 200;
-		int xpBar3 = 300;
-		int xpBar4 = 400;
-		int xpBar5 = 500;
-		Boolean battling = true;
-		System.out.println(monster);
+		boolean battling = true;
+		int monsterHealth = 0;
 		int monsterLevel = 0;
+		int monsterAttack = 0;
 		while (battling)
 		{
-			while (level <= monsterLevel)
+			switch (monster)
 			{
-				switch (monster)
+			// Level Ones
+			case "Undead Corpse":
 				{
-				// Level Ones
-				case "Undead Corpse":
+					monsterLevel = 1;
+					if (monsterLevel > level)
 					{
-						monsterLevel = 1;
+						monster = callCreateMonster();
 						break;
 					}
-				case "Rat":
+					monsterHealth = 60;
+
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl1);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Rat":
+				{
+					monsterLevel = 1;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 
 						break;
 					}
-				case "Slime":
+					monsterHealth = 15;
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl1);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Slime":
+				{
+					monsterLevel = 1;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Giant Leech":
+					monsterHealth = 60;
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl1);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Giant Leech":
+				{
+					monsterLevel = 1;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Skeleton":
+					monsterHealth = 25;
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl1);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Skeleton":
+				{
+					monsterLevel = 1;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				// Level Twos
-				case "Lich":
+					monsterHealth = 50;
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl1);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			// Level Twos
+			case "Lich":
+				{
+					monsterLevel = 2;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Skeleton Archer":
+					monsterHealth = 100;
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl2);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Skeleton Archer":
+				{
+					monsterLevel = 2;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Rust Monster":
+					monsterHealth = 30;
+					int mAttack = (int) (Math.random() * 10 + 20);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl2);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Rust Monster":
+				{
+					monsterLevel = 2;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Ghoul":
+					monsterHealth = 140;
+					int mAttack = (int) (Math.random() * 10 + 25);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl2);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Ghoul":
+				{
+					monsterLevel = 2;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Blood Hound":
+					monsterHealth = 120;
+					int mAttack = (int) (Math.random() * 10 + 25);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl2);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Blood Hound":
+				{
+					monsterLevel = 2;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				// Level Threes
-				case "Orc":
+					monsterHealth = 80;
+					int mAttack = (int) (Math.random() * 10 + 25);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl2);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			// Level Threes
+			case "Orc":
+				{
+					monsterLevel = 3;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Skeleton Warrior":
+					monsterHealth = 200;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl3);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Skeleton Warrior":
+				{
+					monsterLevel = 3;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Giant":
+					monsterHealth = 135;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl3);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Giant":
+				{
+					monsterLevel = 3;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Dark Mage":
+					monsterHealth = 250;
+					int mAttack = (int) (Math.random() * 10 + 60);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl3);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Dark Mage":
+				{
+					monsterLevel = 3;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Stone Giant":
+					monsterHealth = 110;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl3);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Stone Giant":
+				{
+					monsterLevel = 3;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Vampire":
+					monsterHealth = 400;
+					int mAttack = (int) (Math.random() * 10 + 50);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl3);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			// Level Fours
+			case "Vampire":
+				{
+					monsterLevel = 4;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Corrupted Hero":
+					monsterHealth = 90;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl4);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Corrupted Hero":
+				{
+					monsterLevel = 4;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Elemental":
+					monsterHealth = 120;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl4);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Elemental":
+				{
+					monsterLevel = 4;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Mimic":
+					monsterHealth = 40;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl4);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Mimic":
+				{
+					monsterLevel = 4;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				// Level Fives
-				case "Demon":
+					monsterHealth = 300;
+					int mAttack = (int) (Math.random() * 10 + 40);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl4);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			// Level Fives
+			case "Demon":
+				{
+					monsterLevel = 5;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
-				case "Dragon":
+					monsterHealth = 400;
+					int mAttack = (int) (Math.random() * 40 + 50);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
 					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl5);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
+				}
+			case "Dragon":
+				{
+					monsterLevel = 5;
+					if (monsterLevel > level)
+					{
+						monster = callCreateMonster();
 						break;
 					}
+					monsterHealth = 700;
+					int mAttack = (int) (Math.random() * 60 + 70);
+					if (userPlayer.getDefense() > mAttack)
+						monsterAttack = mAttack / 2;
+					monsterAttack = mAttack;
+					System.out.println("You're fighting a " + monster + " and it has " + monsterHealth + "HP");
+					boolean monsterDead = false;
+					while (monsterDead == false)
+					{
+						int battleMenuChoice = battleMenu();
+						switch (battleMenuChoice)
+						{
+						case 1: // Attack
+							{
+								monsterHealth = attack(monsterHealth, monsterAttack, monster, monsterDead);
+								if (monsterHealth < 0)
+								{
+									System.out.println("You gained " + lvl1 + "EXP");
+									userPlayer.giveExp(lvl1);
+									monsterDead = true;
+								}
+
+								break;
+							}
+						case 2: // Check Monster Stats
+							{
+								System.out.println(
+										monster + ": \nAttack [" + monsterAttack + "]\nHealth [" + monsterHealth + "]");
+
+								System.out.println("Possible EXP: " + lvl5);
+								break;
+							}
+						case 3: // Leave Battle
+							{
+								Save.savePlayer(userPlayer, filePath);
+								battling = false;
+								printMainMenu();
+								break;
+							}
+						}
+					}
+					break;
 				}
 			}
 		}
-
 	}
 
 	private static String callCreateMonster()
@@ -233,8 +1260,16 @@ public class Game
 		{
 			System.out.println("didn't reach it");
 			e.printStackTrace();
-			return null;
+			try
+			{
+				return monsterSelector();
+			} catch (IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		return null;
 	}
 
 	private static String monsterSelector() throws IOException
