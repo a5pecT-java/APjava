@@ -47,49 +47,52 @@ public class Game
 	private void checkMenuChoice(int menuChoice)
 	{
 		switch (menuChoice)
-			{
-			case 1: // 1. Create a Character!
+		{
+		case 1: // 1. Create a Character!
 			{
 				createPlayer();
 				break;
 			}
-			case 2: // 2. Load a Character!"
+		case 2: // 2. Load a Character!"
 			{
 				Load.loadPlayer(scanner, userPlayer, filePath);
 				break;
 			}
-			case 3: // 3. Check your Stats!
+		case 3: // 3. Check your Stats!
 			{
 				checkStats();
 				break;
 			}
-			case 4: // 4. Go and Battle!
+		case 4: // 4. Go and Battle!
 			{
 				userPlayer.getExp();
 				battle(callCreateMonster(), userPlayer);
 				break;
 			}
-			case 5: // 5. Save and Quit
+		case 5: // 5. Save and Quit
 			{
 				Save.savePlayer(userPlayer, filePath);
 				break;
 			}
-			case 6: // 6. Quit
+		case 6: // 6. Quit
 			{
 				playing = false;
 				break;
 			}
-			}
+		}
 	}
 
 	private static void battle(String monster, Player userPlayer)
 	{
+
+		// Amount of XP you get from each monster.
 		int lvl1 = (int) (Math.random() * 10 + 15);
 		int lvl2 = (int) (Math.random() * 20 + 15);
 		int lvl3 = (int) (Math.random() * 30 + 20);
 		int lvl4 = (int) (Math.random() * 40 + 25);
 		int lvl5 = (int) (Math.random() * 50 + 30);
 		double XP = userPlayer.getExp();
+		System.out.println(XP);
 		int level = 1;
 		if (XP < 100)
 		{
@@ -112,108 +115,111 @@ public class Game
 			System.out.println(userPlayer.getName() + "'s Level: " + level);
 		}
 		int xpBar1 = 100;
-
+		int xpBar2 = 200;
+		int xpBar3 = 300;
+		int xpBar4 = 400;
+		int xpBar5 = 500;
 		Boolean battling = true;
-		Boolean dead = false;
-		System.out.println("In battle.");
+		System.out.println(monster);
+		int monsterLevel = 0;
 		while (battling)
 		{
-			switch (monster)
+			while (level <= monsterLevel)
+			{
+				switch (monster)
 				{
 				// Level Ones
 				case "Undead Corpse":
-				{
-//					if (dead)
-//					{
-//						userPlayer.giveExp(lvl1);
-//					}
-					break;
-				}
+					{
+						monsterLevel = 1;
+						break;
+					}
 				case "Rat":
-				{
+					{
 
-					break;
-				}
+						break;
+					}
 				case "Slime":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Giant Leech":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Skeleton":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				// Level Twos
 				case "Lich":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Skeleton Archer":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Rust Monster":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Ghoul":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Blood Hound":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				// Level Threes
 				case "Orc":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Skeleton Warrior":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Giant":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Dark Mage":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Stone Giant":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Vampire":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Corrupted Hero":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Elemental":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Mimic":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				// Level Fives
 				case "Demon":
-				{
-					break;
-				}
+					{
+						break;
+					}
 				case "Dragon":
-				{
-					break;
+					{
+						break;
+					}
 				}
-				}
+			}
 		}
 
 	}
@@ -282,18 +288,18 @@ public class Game
 	private ClassTypes getClassTypeFromInt(int choice)
 	{
 		switch (choice)
-			{
-			case 1:
-				return ClassTypes.Knight;
-			case 2:
-				return ClassTypes.Rouge;
-			case 3:
-				return ClassTypes.Wizard;
-			case 4:
-				return ClassTypes.Deity;
-			default:
-				return ClassTypes.Knight;
-			}
+		{
+		case 1:
+			return ClassTypes.Knight;
+		case 2:
+			return ClassTypes.Rouge;
+		case 3:
+			return ClassTypes.Wizard;
+		case 4:
+			return ClassTypes.Deity;
+		default:
+			return ClassTypes.Knight;
+		}
 	}
 
 	private void pickStats(String name, ClassTypes selectedClassType)
@@ -315,33 +321,33 @@ public class Game
 		Player newPlayer = null;
 
 		switch (selectedClassType)
-			{
-			case Knight:
+		{
+		case Knight:
 			{
 				newPlayer = new Knight(name, 100, 15 + attack, 30 + defense, 8 + agility, 0.0, 0.0);
 				System.out.println("You Picked Knight, you have more armor and a special attribute called Pride!");
 				break;
 			}
-			case Rouge:
+		case Rouge:
 			{
 				newPlayer = new Rouge(name, 80, 25 + attack, 10 + defense, 30 + agility, 0.0, 100.0);
 				System.out.println(
 						"You Picked Rouge, you have more agility and attack and a special attribute called Stamina!");
 				break;
 			}
-			case Wizard:
+		case Wizard:
 			{
 				newPlayer = new Wizard(name, 60, 40 + attack, 5 + defense, 15 + agility, 0.0, 100.0);
 				System.out.println("You Picked Wizard, you have the most attack and a special attribute called Mana!");
 				break;
 			}
-			case Deity:
+		case Deity:
 			{
 				newPlayer = new Deity("Lord " + name, 0.0);
 				System.out.println("You're literally a God, unleash your wrath amongst the infinity tower!");
 				break;
 			}
-			}
+		}
 
 		userPlayer = newPlayer;
 		System.out.println();
